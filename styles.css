@@ -1,0 +1,193 @@
+/* styles.css */
+
+/* Import custom Harry Potter font */
+@font-face {
+  font-family: 'HarryPotter';
+  src: url('harry_potter_font.tff') format('truetype');
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+#background {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Background video: covers the window (zoom/center) */
+#bgVideo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* Goblet styling */
+#goblet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 150px;
+  transform: translate(-50%, -50%);
+  background: url('goblet.png') no-repeat center center;
+  background-size: contain;
+  z-index: 1;
+}
+
+/* Controls container – centered at the top */
+#controls {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  border-radius: 8px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Container for input fields – arranged in a row and centered */
+#inputs {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+#inputs input,
+#inputs textarea {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  width: 150px;
+}
+
+/* Button styling */
+#controls button {
+  padding: 10px;
+  background-color: #0066cc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#controls button:hover {
+  background-color: #005bb5;
+}
+
+/* Teams container styling */
+#teams {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 2;
+}
+
+#restartButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.5); /* Black background with 50% opacity */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    transition: background 0.3s ease, opacity 0.3s ease;
+}
+
+#restartButton:hover {
+    background: rgba(0, 0, 0, 0.8); /* Darker black on hover */
+    opacity: 1;
+}
+
+
+
+/* Each team box is a vertical flex container with a gap between notes */
+.team {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border: 2px solid #e1e7ec;
+    border-radius: 8px;
+    min-width: 150px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px; /* Reduced gap between elements */
+    color: #e1e7ec; /* Set team box text color */
+}
+
+.team h3 {
+  text-align: center;
+  margin-top: 0;
+}
+
+/* Note styling: uses note.png with custom Harry Potter handwritten look */
+.note {
+    position: absolute;
+    width: 120px;
+    height: 60px;
+    background: url('note.png') no-repeat center center;
+    background-size: contain;
+    font-family: 'HarryPotter', cursive; /* Use custom Harry Potter font */
+    font-style: italic;
+    font-size: 16px;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.5; /* Set font opacity to 0.5 */
+    /* No default transform here; initial scale will be set via GSAP */
+}
+
+/* Blue flash (glow) effect behind the note */
+.big-blue-flash {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(0,150,255,0.9) 0%, rgba(236, 243, 247, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+/* Responsive: stack inputs on narrow screens */
+@media (max-width: 500px) {
+  #inputs {
+    flex-direction: column;
+  }
+}
