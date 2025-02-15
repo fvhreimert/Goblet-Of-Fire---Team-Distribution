@@ -173,16 +173,24 @@ body, html {
     /* No default transform here; initial scale will be set via GSAP */
 }
 
-/* Blue flash (glow) effect behind the note */
-.big-blue-flash {
+/* Flash element using a CSS variable for color */
+.big-flash {
   position: absolute;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(0,150,255,0.9) 0%, rgba(236, 243, 247, 0) 70%);
+  background: radial-gradient(circle, var(--flash-color, rgba(0,150,255,0.9)) 0%, rgba(236,243,247,0) 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 1;
-  opacity: 0;
+}
+
+/* Spark styling for the explosion effect */
+.spark {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* Responsive: stack inputs on narrow screens */
