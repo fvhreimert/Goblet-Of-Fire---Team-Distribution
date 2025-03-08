@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preload" href="note.png" as="image">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team Generator - Goblet of Fire</title>
@@ -23,6 +24,10 @@
     
     <!-- Controls for team count and names -->
     <div id="controls">
+      <div id="slider-container">
+        <label for="delaySlider">Delay between notes: <span id="delayValue">8</span> sec</label>
+        <input type="range" id="delaySlider" min="1" max="60" value="8">
+      </div>
       <div id="inputs">
         <input type="number" id="teamCount" placeholder="Number of Teams" min="1">
         <textarea id="names" placeholder="Enter names, one per line"></textarea>

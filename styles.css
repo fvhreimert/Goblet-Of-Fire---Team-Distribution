@@ -62,6 +62,10 @@ body, html {
   gap: 10px;
 }
 
+#slider-container label {
+  color: white;
+}
+
 /* Container for input fields – arranged in a row and centered */
 #inputs {
   display: flex;

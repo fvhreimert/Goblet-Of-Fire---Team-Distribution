@@ -20,6 +20,7 @@ function startDistribution() {
     const teamCountInput = document.getElementById('teamCount');
     const namesInput = document.getElementById('names');
     const teamsContainer = document.getElementById('teams');
+    const delaySlider = document.getElementById('delaySlider');
 
     const teamCount = parseInt(teamCountInput.value);
     if (isNaN(teamCount) || teamCount < 1) {
@@ -51,11 +52,14 @@ function startDistribution() {
         teams.push(teamDiv);
     }
 
+    // Read the slider value and convert to milliseconds
+    const delayInSeconds = parseInt(delaySlider.value);
+    let delay = delayInSeconds * 1000;
+    const delayIncrement = delayInSeconds * 1000;
+
     // Shuffle names and schedule animations
     shuffleArray(names);
     let currentTeamIndex = 0;
-    let delay = 8000; // Initial 8 second delay
-    const delayIncrement = 8000;
 
     names.forEach((name, index) => {
         // Schedule sound 1 second before animation
@@ -72,6 +76,7 @@ function startDistribution() {
         delay += delayIncrement;
     });
 }
+
 
 // Function to animate a note moving from the starting position to its team
 function distributeName(name, teamDiv, isLast = false) {
@@ -246,3 +251,7 @@ function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
+
+document.getElementById('delaySlider').addEventListener('input', (e) => {
+    document.getElementById('delayValue').textContent = e.target.value;
+  });
