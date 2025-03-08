@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team Generator - Goblet of Fire</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=1.2">
   <!-- Include GSAP for animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <!-- FontAwesome for restart icon -->
@@ -22,7 +22,7 @@
     <!-- Goblet image at the center -->
     <div id="goblet"></div>
     
-    <!-- Controls for team count and names -->
+    <!-- Controls for team count, names and delay slider -->
     <div id="controls">
       <div id="slider-container">
         <label for="delaySlider">Delay between notes: <span id="delayValue">8</span> sec</label>
@@ -42,7 +42,7 @@
     <button id="restartButton"><i class="fas fa-redo"></i></button>
   </div>
   
-  <script src="app.js"></script>
+  <script src="app.js?v=1.2"></script>
   <script>
     // Ensure video autoplay works
     window.addEventListener('load', () => {
