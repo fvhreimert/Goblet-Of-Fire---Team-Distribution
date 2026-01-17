@@ -1,17 +1,43 @@
 /* styles.css */
 
-/* Import custom Harry Potter font */
+/* CSS Custom Properties - Design System */
+:root {
+  /* Stone/Marble Colors */
+  --stone-dark: #2a2a2a;
+  --stone-mid: #4a4a4a;
+  --stone-light: #6a6a6a;
+  --stone-highlight: #8a8a8a;
+
+  /* Magical Blue/Silver Accents */
+  --magic-blue: #4a9eff;
+  --magic-blue-glow: rgba(74, 158, 255, 0.6);
+  --magic-silver: #c0c0c0;
+  --magic-silver-light: #e8e8e8;
+
+  /* Parchment Colors */
+  --parchment-light: #f4e4c1;
+  --parchment-mid: #e8d4a8;
+  --parchment-dark: #d4c090;
+  --parchment-edge: #8b7355;
+
+  /* Text Colors */
+  --text-light: #e8e8e8;
+  --text-gold: #d4af37;
+  --text-ink: #2a1f11;
+}
+
 @font-face {
   font-family: 'HarryPotter';
-  src: url('harry_potter_font.tff') format('truetype');
+  src: url('harry_potter_font.ttf') format('truetype'); /* Ensure path/name is correct */
 }
 
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: Arial, sans-serif;
+  font-family: 'Cinzel', 'Garamond', serif;
   overflow: hidden;
+  /* REMOVED background-color: #000; Let video handle it */
 }
 
 #background {
@@ -19,18 +45,25 @@ body, html {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background-color: #000; /* Keep black fallback */
+  isolation: isolate; /* Create a new stacking context for #background */
+  perspective: 1000px; /* Enable 3D perspective for flying notes */
 }
 
-/* Background video: covers the window (zoom/center) */
+/* Background video: covers the window */
 #bgVideo {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-  z-index: -2;
+  top: 0; /* Align to top */
+  left: 0; /* Align to left */
+  width: 100%; /* Cover width */
+  height: 100%; /* Cover height */
+  object-fit: cover; /* Scale to cover, may crop */
+  z-index: -2; /* Definitely behind everything else in #background */
+  /* Remove transform: translate(-50%, -50%); not needed with top/left 0 and 100% width/height */
+  display: block; /* Ensure it's treated as a block element */
+  opacity: 1; /* Ensure fully opaque */
+  /* Force hardware acceleration (might help, might not) */
+  transform: translateZ(0);
 }
 
 /* Goblet styling */
@@ -40,177 +73,843 @@ body, html {
   left: 50%;
   width: 100px;
   height: 150px;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* Keep centering */
   background: url('goblet.png') no-repeat center center;
   background-size: contain;
-  z-index: 1;
+  z-index: 1; /* Above video, below effects */
+  filter: brightness(0.8) contrast(1.1);
 }
 
-/* Controls container – centered at the top */
+/* Controls container - Stone tablet panel */
 #controls {
   position: absolute;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 15px;
-  border-radius: 8px;
-  z-index: 2;
+
+  /* Stone panel texture via layered gradients */
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.1) 0%, transparent 50%),
+    linear-gradient(180deg,
+      #3d3d3d 0%,
+      #4a4a4a 20%,
+      #3a3a3a 80%,
+      #2d2d2d 100%
+    );
+
+  padding: 25px 35px;
+  border-radius: 12px;
+
+  /* Stone border */
+  border: 3px solid #5a5a5a;
+
+  /* Carved inset effect */
+  box-shadow:
+    inset 0 3px 6px rgba(0,0,0,0.4),
+    inset 0 -2px 4px rgba(255,255,255,0.1),
+    0 0 20px rgba(74, 158, 255, 0.15),
+    0 8px 30px rgba(0,0,0,0.6);
+
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
+}
+
+/* Ornate top decoration */
+#controls::before {
+  content: '\2756';
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  color: var(--magic-silver);
+  text-shadow: 0 0 15px var(--magic-blue-glow), 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* Bottom decorative line */
+#controls::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--magic-silver) 20%,
+    var(--magic-blue) 50%,
+    var(--magic-silver) 80%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+#slider-container {
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    align-items: center;
+    gap: 8px; /* Match gap of team-count-wrapper */
+    width: 100%;
 }
 
 #slider-container label {
-  color: white;
+  color: var(--text-light);
+  font-family: 'Cinzel', serif;
+  font-size: 0.9em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
-/* Container for input fields – arranged in a row and centered */
+#name-input-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between input and button */
+}
+
+
+#delayValue {
+  color: var(--magic-blue);
+  font-weight: 700;
+  text-shadow: 0 0 10px var(--magic-blue-glow);
+}
+
+/* Custom slider track */
+#delaySlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 120px;
+  height: 8px;
+  background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-radius: 4px;
+  border: 1px solid #3a3a3a;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+/* Slider thumb - WebKit */
+#delaySlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 30% 30%, #6a6a6a 0%, #4a4a4a 50%, #3a3a3a 100%);
+  border: 2px solid #5a5a5a;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.2);
+  cursor: grab;
+  transition: all 0.2s ease;
+}
+
+#delaySlider::-webkit-slider-thumb:hover {
+  border-color: var(--magic-blue);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4), 0 0 15px var(--magic-blue-glow);
+}
+
+/* Slider thumb - Firefox */
+#delaySlider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 30% 30%, #6a6a6a 0%, #4a4a4a 50%, #3a3a3a 100%);
+  border: 2px solid #5a5a5a;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  cursor: grab;
+}
+
+/* Input fields container */
 #inputs {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
+  flex-direction: column;
+  gap: 15px;
   justify-content: center;
   width: 100%;
-  max-width: 400px;
+  max-width: 450px;
 }
 
 #inputs input,
 #inputs textarea {
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-  width: 150px;
+  padding: 12px 15px;
+
+  /* Carved inset stone look */
+  background: linear-gradient(180deg, #1a1a1a 0%, #252525 50%, #1f1f1f 100%);
+  border: 2px solid #3a3a3a;
+  border-radius: 6px;
+
+  /* Inset carved effect */
+  box-shadow:
+    inset 0 3px 8px rgba(0,0,0,0.6),
+    inset 0 -1px 2px rgba(255,255,255,0.05),
+    0 1px 2px rgba(0,0,0,0.3);
+
+  color: var(--text-light);
+  font-family: 'Garamond', serif;
+  font-size: 0.9em;
+  /* width: 180px; REMOVED fixed width to allow flex/full width */
+  width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
-/* Button styling */
-#controls button {
-  padding: 10px;
-  background-color: #0066cc;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
+/* Team Count Specific Styles */
+#team-count-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+#team-count-wrapper label {
+  color: var(--text-light);
+  font-family: 'Cinzel', serif;
+  font-size: 0.9em;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+#team-count-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Custom Stone Spinner Buttons */
+.stone-spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid #5a5a5a;
+  background: radial-gradient(circle at 30% 30%, #4a4a4a 0%, #3a3a3a 50%, #2d2d2d 100%);
+  color: var(--text-light);
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.4em;
+  line-height: 1;
   cursor: pointer;
-  font-weight: bold;
+  box-shadow: 
+    inset 0 1px 2px rgba(255,255,255,0.1),
+    0 3px 6px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0; /* Reset default button padding */
 }
 
-#controls button:hover {
-  background-color: #005bb5;
+.stone-spinner:hover {
+  border-color: var(--magic-blue);
+  color: var(--magic-blue);
+  box-shadow: 0 0 15px var(--magic-blue-glow);
+  transform: translateY(-1px);
 }
 
-/* Teams container styling */
+.stone-spinner:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Hide default spinners and style input */
+#teamCount {
+  -moz-appearance: textfield;
+  text-align: center;
+  font-size: 1.5em; /* Larger text */
+  font-weight: 700;
+  width: 80px !important;
+  height: 50px;
+  color: var(--magic-blue);
+}
+
+#teamCount::-webkit-outer-spin-button,
+#teamCount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#inputs input:focus,
+#inputs textarea:focus {
+  outline: none;
+  border-color: var(--magic-blue);
+  box-shadow:
+    inset 0 3px 8px rgba(0,0,0,0.6),
+    inset 0 -1px 2px rgba(255,255,255,0.05),
+    0 0 15px var(--magic-blue-glow);
+}
+
+#inputs input::placeholder,
+#inputs textarea::placeholder {
+  color: #666;
+  font-style: italic;
+}
+
+#inputs textarea {
+  height: 200px; /* Increased to show 8-12 lines */
+  resize: vertical;
+}
+
+/* Start Button - Carved Stone Tablet */
+#controls button#startButton {
+  padding: 14px 28px;
+
+  /* Stone tablet gradient */
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.1) 0%, transparent 60%),
+    linear-gradient(180deg,
+      #4a4a4a 0%,
+      #3a3a3a 30%,
+      #2d2d2d 70%,
+      #252525 100%
+    );
+
+  border: 3px solid #5a5a5a;
+  border-radius: 8px;
+
+  /* Embossed text effect */
+  color: var(--text-light);
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 700;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow:
+    0 -1px 0 rgba(0,0,0,0.8),
+    0 1px 1px rgba(255,255,255,0.1);
+
+  /* 3D stone button effect */
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.1),
+    inset 0 -3px 6px rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.5);
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Magical glow on hover */
+#controls button#startButton:hover {
+  border-color: var(--magic-blue);
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.1),
+    inset 0 -3px 6px rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.5),
+    0 0 25px var(--magic-blue-glow),
+    0 0 50px rgba(74, 158, 255, 0.3);
+  text-shadow:
+    0 -1px 0 rgba(0,0,0,0.8),
+    0 1px 1px rgba(255,255,255,0.1),
+    0 0 20px var(--magic-blue-glow);
+  transform: translateY(-2px);
+}
+
+/* Pressed state */
+#controls button#startButton:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 3px 6px rgba(0,0,0,0.4),
+    0 1px 2px rgba(0,0,0,0.5),
+    0 0 15px var(--magic-blue-glow);
+}
+
+/* Animated glow sweep on hover */
+#controls button#startButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(74, 158, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transition: left 0.5s ease;
+}
+
+#controls button#startButton:hover::before {
+  left: 100%;
+}
+
+
+/* Teams container styling - left/right sides layout */
 #teams {
   position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 20px;
-  z-index: 2;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 15px 0;
+  padding: 0 25px;
+  z-index: 15;
+  box-sizing: border-box;
+  pointer-events: none;
 }
 
+/* Teams re-enable pointer events */
+.team {
+  pointer-events: auto;
+}
+
+/* Odd teams (1, 3, 5...) go to left column */
+.team:nth-child(odd) {
+  grid-column: 1;
+  justify-self: start;
+}
+
+/* Even teams (2, 4, 6...) go to right column */
+.team:nth-child(even) {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* Restart Button - Stone Medallion */
 #restartButton {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    padding: 8px;
-    background: rgba(0, 0, 0, 0.5); /* Black background with 50% opacity */
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    transition: background 0.3s ease, opacity 0.3s ease;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+
+  /* Stone medallion gradient */
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 50%),
+    radial-gradient(circle,
+      #4a4a4a 0%,
+      #3a3a3a 50%,
+      #2d2d2d 100%
+    );
+
+  border: 3px solid #5a5a5a;
+  border-radius: 50%;
+
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.1),
+    inset 0 -3px 6px rgba(0,0,0,0.3),
+    0 3px 10px rgba(0,0,0,0.5);
+
+  color: var(--magic-silver);
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 25;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.3s ease;
 }
 
 #restartButton:hover {
-    background: rgba(0, 0, 0, 0.8); /* Darker black on hover */
-    opacity: 1;
+  border-color: var(--magic-blue);
+  color: var(--magic-blue);
+
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.1),
+    inset 0 -3px 6px rgba(0,0,0,0.3),
+    0 3px 10px rgba(0,0,0,0.5),
+    0 0 20px var(--magic-blue-glow);
+
+  transform: rotate(180deg);
 }
 
 
-
-/* Each team box is a vertical flex container with a gap between notes */
+/* Each team box - Stone Pedestal */
 .team {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border: 2px solid #e1e7ec;
-    border-radius: 8px;
-    min-width: 150px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px; /* Reduced gap between elements */
-    color: #e1e7ec; /* Set team box text color */
+  position: relative;
+
+  /* Stone texture via layered gradients */
+  background:
+    radial-gradient(ellipse at 25% 15%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 75% 85%, rgba(0,0,0,0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 60%),
+    linear-gradient(180deg,
+      #3d3d3d 0%,
+      #484848 15%,
+      #3a3a3a 50%,
+      #333333 85%,
+      #2a2a2a 100%
+    );
+
+  padding: 15px 12px;
+  min-width: 160px;
+
+  /* Stone slab edges */
+  border-radius: 8px;
+
+  /* Stone border */
+  border: 3px solid #555555;
+
+  /* Carved stone depth */
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.08),
+    inset 0 -4px 8px rgba(0,0,0,0.4),
+    0 6px 20px rgba(0,0,0,0.5),
+    0 12px 35px rgba(0,0,0,0.3),
+    0 0 25px rgba(74, 158, 255, 0.1);
+
+  /* Single column by default */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-grow: 0;
+  flex-shrink: 0;
+
+  transition: box-shadow 0.3s ease;
 }
 
+
+/* Hover - subtle glow */
+.team:hover {
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.08),
+    inset 0 -4px 8px rgba(0,0,0,0.4),
+    0 6px 20px rgba(0,0,0,0.5),
+    0 12px 35px rgba(0,0,0,0.3),
+    0 0 35px rgba(74, 158, 255, 0.25);
+}
+
+/* Active team highlight - currently being filled */
+.team.active-team {
+  border-color: var(--magic-blue);
+  box-shadow:
+    inset 0 2px 4px rgba(255,255,255,0.08),
+    inset 0 -4px 8px rgba(0,0,0,0.4),
+    0 6px 20px rgba(0,0,0,0.5),
+    0 12px 35px rgba(0,0,0,0.3),
+    0 0 40px var(--magic-blue-glow),
+    0 0 80px rgba(74, 158, 255, 0.3);
+  animation: pulseGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,0.08),
+      inset 0 -4px 8px rgba(0,0,0,0.4),
+      0 6px 20px rgba(0,0,0,0.5),
+      0 12px 35px rgba(0,0,0,0.3),
+      0 0 40px var(--magic-blue-glow),
+      0 0 80px rgba(74, 158, 255, 0.3);
+  }
+  50% {
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,0.08),
+      inset 0 -4px 8px rgba(0,0,0,0.4),
+      0 6px 20px rgba(0,0,0,0.5),
+      0 12px 35px rgba(0,0,0,0.3),
+      0 0 60px var(--magic-blue-glow),
+      0 0 100px rgba(74, 158, 255, 0.4);
+  }
+}
+
+/* Top decorative carved edge */
+.team::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.1) 20%,
+    rgba(255,255,255,0.15) 50%,
+    rgba(255,255,255,0.1) 80%,
+    transparent 100%
+  );
+}
+
+/* Team header styling */
 .team h3 {
   text-align: center;
-  margin-top: 0;
+  margin: 0 0 12px 0;
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--text-light);
+  text-shadow:
+    0 -1px 0 rgba(0,0,0,0.8),
+    0 1px 1px rgba(255,255,255,0.1),
+    0 0 15px var(--magic-blue-glow);
+
+  /* Decorative underline */
+  padding-bottom: 10px;
+  border-bottom: 2px solid #555555;
+  width: 100%;
+  position: relative;
+  flex-shrink: 0;
 }
 
-/* Note styling: uses note.png with custom Harry Potter handwritten look */
+/* Notes container inside team box */
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Two-column mode for notes inside team box */
+.team.two-columns {
+  min-width: 320px;
+}
+
+.team.two-columns .notes-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+  justify-items: center;
+}
+
+/* Decorative flourish under header */
+.team h3::after {
+  content: '\2756';
+  position: absolute;
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--magic-silver);
+  text-shadow: 0 0 8px var(--magic-blue-glow);
+}
+
+/* Note styling - Pure CSS aged parchment with torn edges */
 .note {
-    position: absolute;
-    width: 120px;
-    height: 60px;
-    background: url('note.png') no-repeat center center;
-    background-size: contain;
-    font-family: 'HarryPotter', cursive; /* Use custom Harry Potter font */
-    font-style: italic;
-    font-size: 16px;
-    color: #000;
+    /* Position: absolute set by JS initially */
+    width: 145px;
+    height: 68px;
+    position: relative;
+
+    /* Aged parchment with heavy texture */
+    background:
+      /* Random stains and water damage spots */
+      radial-gradient(ellipse at 10% 20%, rgba(101, 60, 20, 0.25) 0%, transparent 40%),
+      radial-gradient(ellipse at 90% 15%, rgba(80, 50, 20, 0.2) 0%, transparent 35%),
+      radial-gradient(ellipse at 85% 80%, rgba(120, 80, 40, 0.22) 0%, transparent 45%),
+      radial-gradient(ellipse at 20% 85%, rgba(90, 55, 25, 0.18) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 40%, rgba(139, 100, 50, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(160, 110, 50, 0.1) 0%, transparent 35%),
+      radial-gradient(ellipse at 30% 50%, rgba(100, 70, 30, 0.15) 0%, transparent 30%),
+      /* Mottled texture noise */
+      radial-gradient(circle at 25% 25%, rgba(180, 140, 80, 0.15) 0%, transparent 20%),
+      radial-gradient(circle at 75% 35%, rgba(200, 160, 100, 0.1) 0%, transparent 15%),
+      radial-gradient(circle at 40% 70%, rgba(170, 130, 70, 0.12) 0%, transparent 18%),
+      radial-gradient(circle at 60% 80%, rgba(190, 150, 90, 0.08) 0%, transparent 22%),
+      /* Base weathered parchment */
+      linear-gradient(165deg,
+        #d8c8a0 0%,
+        #e5d5b5 10%,
+        #dcc89a 25%,
+        #d0bc88 45%,
+        #c8b078 65%,
+        #bfa56c 85%,
+        #b89a60 100%
+      );
+
+    /* Irregular torn edges via polygon clip-path */
+    clip-path: polygon(
+      2% 5%, 8% 2%, 15% 6%, 25% 1%, 35% 4%, 45% 0%, 55% 3%, 65% 1%, 75% 5%, 85% 2%, 92% 4%, 98% 1%,
+      100% 8%, 97% 20%, 100% 35%, 98% 50%, 100% 65%, 97% 80%, 100% 92%,
+      96% 98%, 88% 95%, 78% 100%, 68% 96%, 58% 99%, 48% 95%, 38% 100%, 28% 97%, 18% 100%, 8% 96%, 2% 99%,
+      0% 90%, 3% 75%, 0% 60%, 2% 45%, 0% 30%, 3% 15%, 0% 5%
+    );
+
+    /* Heavy edge shadows for depth */
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+
+    /* Text styling */
+    font-family: 'Felipa', cursive; /* Handwritten quill style */
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+    color: #26190a; /* Deep ink color */
+    
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    padding: 10px 15px;
     pointer-events: none;
-    z-index: 2;
-    opacity: 0.5; /* Set font opacity to 0.5 */
-    /* No default transform here; initial scale will be set via GSAP */
+    z-index: 30;
+    box-sizing: border-box;
+    opacity: 1;
 }
 
-/* Flash element using a CSS variable for color */
+/* Edge burn/darkening overlay */
+.note::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background:
+      /* Burnt/darkened edges all around */
+      radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(80, 50, 20, 0.35) 100%);
+    clip-path: inherit;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Pending Note (floating before distribution) */
+.pending-note {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px; /* Slightly smaller than final note */
+    height: 56px;
+    background: inherit; /* Inherit the complex parchment background from .note */
+    /* Copying background from .note to ensure it renders if inherit fails or classing differs */
+    background:
+      radial-gradient(ellipse at 10% 20%, rgba(101, 60, 20, 0.25) 0%, transparent 40%),
+      linear-gradient(165deg, #d8c8a0 0%, #b89a60 100%);
+    
+    /* Re-apply note styles */
+    clip-path: polygon(
+      2% 5%, 8% 2%, 15% 6%, 25% 1%, 35% 4%, 45% 0%, 55% 3%, 65% 1%, 75% 5%, 85% 2%, 92% 4%, 98% 1%,
+      100% 8%, 97% 20%, 100% 35%, 98% 50%, 100% 65%, 97% 80%, 100% 92%,
+      96% 98%, 88% 95%, 78% 100%, 68% 96%, 58% 99%, 48% 95%, 38% 100%, 28% 97%, 18% 100%, 8% 96%, 2% 99%,
+      0% 90%, 3% 75%, 0% 60%, 2% 45%, 0% 30%, 3% 15%, 0% 5%
+    );
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+    font-family: 'Felipa', cursive;
+    font-size: 24px;
+    color: #26190a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8px 10px;
+    pointer-events: none;
+    z-index: 100; /* High z-index to ensure visibility */
+    opacity: 0; /* Start hidden */
+}
+.pending-note::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(80, 50, 20, 0.35) 100%);
+    clip-path: inherit;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Flash element */
 .big-flash {
-  position: absolute;
-  background: radial-gradient(circle, var(--flash-color, rgba(0,150,255,0.9)) 0%, rgba(236,243,247,0) 70%);
+  /* position: absolute set by JS */
+  background: radial-gradient(circle, var(--flash-color, rgba(0,150,255,0.95)) 0%, rgba(236,243,247,0) 70%);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 1;
+  /* z-index handled by parent container */
 }
+.big-flash.enhanced-flash { } /* Keep class if needed later */
 
-/* Shockwave element to enhance the epic effect */
+
+/* Shockwave element */
 .shockwave {
-  position: absolute;
-  background: radial-gradient(circle, rgba(113, 177, 195, 0.8) 0%, rgba(255,255,255,0) 70%);
+  /* position: absolute set by JS */
+  background: radial-gradient(circle, rgba(113, 177, 195, 0.7) 0%, rgba(255,255,255,0) 70%);
   border-radius: 50%;
-  opacity: 0.5;
+  opacity: 0.7;
   pointer-events: none;
-  z-index: 1;
 }
 
-/* Spark styling for the explosion effect (lightblue and behind the note) */
+/* Spark styling (lightblue) */
 .spark {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: radial-gradient(circle, rgba(173,216,230,1) 0%, rgba(173,216,230,0) 70%);
+  /* position: absolute set by JS */
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(173, 216, 230, 1) 0%, rgba(173, 216, 230, 0) 80%);
   border-radius: 50%;
   pointer-events: none;
-  z-index: 1;
+}
+
+/* Gold Spark styling */
+.gold-spark {
+  /* position: absolute set by JS */
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 1) 0%, rgba(255, 215, 0, 0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Magic Beam styling */
+.magic-beam {
+    /* position: absolute set by JS */
+    width: 4px;
+    /* height is set dynamically by GSAP */
+    background: linear-gradient(to bottom, rgba(173, 216, 230, 0), rgba(255, 255, 255, 0.9), rgba(173, 216, 230, 0));
+    border-radius: 2px;
+    pointer-events: none;
+    filter: blur(1px);
 }
 
 
-/* Responsive: stack inputs on narrow screens */
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #controls {
+    padding: 20px 25px;
+  }
+
+  #teams {
+    gap: 12px;
+    padding: 0 15px;
+  }
+
+}
+
 @media (max-width: 500px) {
+  #controls {
+    width: 92%;
+    padding: 15px;
+  }
+
+  #controls::before {
+    font-size: 22px;
+    top: -14px;
+  }
+
   #inputs {
     flex-direction: column;
+    align-items: center;
+    max-width: none;
+  }
+
+  #inputs input,
+  #inputs textarea {
+    width: 95%;
+  }
+
+  #teams {
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+
+  .note {
+    font-size: 24px;
+    width: 115px;
+    height: 55px;
+    padding: 8px 10px;
+  }
+
+  #goblet {
+    width: 80px;
+    height: 120px;
+  }
+
+  #controls button#startButton {
+    font-size: 0.9em;
+    padding: 12px 20px;
   }
 }
+

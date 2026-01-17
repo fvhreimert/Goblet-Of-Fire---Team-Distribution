@@ -3,9 +3,13 @@
 <head>
   <link rel="preload" href="note.png" as="image">
   <meta charset="UTF-8">
+  <!-- Google Fonts for medieval/gothic typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=Felipa&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team Generator - Goblet of Fire</title>
-  <link rel="stylesheet" href="styles.css?v=1.2">
+  <link rel="stylesheet" href="styles.css?v=2.3">
   <!-- Include GSAP for animations -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <!-- FontAwesome for restart icon -->
@@ -24,13 +28,28 @@
     
     <!-- Controls for team count, names and delay slider -->
     <div id="controls">
-      <div id="slider-container">
-        <label for="delaySlider">Delay between notes: <span id="delayValue">8</span> sec</label>
-        <input type="range" id="delaySlider" min="1" max="60" value="8">
-      </div>
       <div id="inputs">
-        <input type="number" id="teamCount" placeholder="Number of Teams" min="1">
-        <textarea id="names" placeholder="Enter names, one per line"></textarea>
+        <!-- Team Count -->
+        <div id="team-count-wrapper">
+          <label for="teamCount">Number of Teams</label>
+          <div id="team-count-controls">
+            <button type="button" id="teamCountMinus" class="stone-spinner">−</button>
+            <input type="number" id="teamCount" min="1" value="2">
+            <button type="button" id="teamCountPlus" class="stone-spinner">+</button>
+          </div>
+        </div>
+
+        <!-- Delay Slider (Moved inside inputs for consistency, or keep separate but styled same) -->
+        <div id="slider-container">
+            <label for="delaySlider">Delay between notes: <span id="delayValue">8</span> sec</label>
+            <input type="range" id="delaySlider" min="1" max="60" value="8">
+        </div>
+
+        <!-- Name Input -->
+        <div id="name-input-wrapper">
+             <input type="text" id="nameInput" placeholder="Enter name" autocomplete="off">
+             <button type="button" id="addNameBtn" class="stone-spinner" style="border-radius: 8px; width: auto; padding: 0 15px; font-size: 1em;">Add</button>
+        </div>
       </div>
       <button id="startButton">Start Distribution</button>
     </div>
@@ -42,7 +61,7 @@
     <button id="restartButton"><i class="fas fa-redo"></i></button>
   </div>
   
-  <script src="app.js?v=1.2"></script>
+  <script src="app.js?v=2.4"></script>
   <script>
     // Ensure video autoplay works
     window.addEventListener('load', () => {
@@ -51,4 +70,6 @@
     });
   </script>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MotionPathPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Physics2DPlugin.min.js"></script>
 </html>
