@@ -6,7 +6,7 @@
 
 The **Goblet of Fire Team Distributor** is a web application that randomly sorts a list of names into teams. It uses Harry Potter-themed visual effects and audio to animate the distribution process, simulating names being chosen from the Goblet of Fire.
 
-**[View the Web Application](https://github.com/fvhreimert/Goblet-Of-Fire---Team-Distribution)**
+**[View the Web Application](https://fvhreimert.github.io/Goblet-Of-Fire---Team-Distribution/)**
 
 ## Key Features
 
